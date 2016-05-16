@@ -1,0 +1,99 @@
+F:/Modelsim/examples/muxtwo_4_test.v {1 {vlog -work work -vopt F:/Modelsim/examples/muxtwo_4_test.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module muxtwo_4_test
+
+Top level modules:
+	muxtwo_4_test
+
+} {} {}} F:/Modelsim/examples/muxtwo_4.v {1 {vlog -work work -vopt F:/Modelsim/examples/muxtwo_4.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module muxtwo_4
+
+Top level modules:
+	muxtwo_4
+
+} {} {}} F:/Modelsim/examples/controlUnit_test.v {1 {vlog -work work -vopt {F:\Modelsim\examples\controlUnit_test.v}
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module controlUnit_test
+
+Top level modules:
+	controlUnit_test
+
+} {} {}} F:/Modelsim/examples/muxtwo_32.v {1 {vlog -work work -vopt F:/Modelsim/examples/muxtwo_32.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module muxtwo_4
+
+Top level modules:
+	muxtwo_4
+
+} {} {}} F:/Modelsim/examples/controlUnit.v {1 {vlog -work work -vopt {F:\Modelsim\examples\controlUnit.v}
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module controlUnit
+
+Top level modules:
+	controlUnit
+
+} {} {}} F:/Modelsim/examples/ALU.v {1 {vlog -work work -vopt F:/Modelsim/examples/ALU.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module ALU
+
+Top level modules:
+	ALU
+
+} {} {}} F:/Modelsim/examples/PC_test.v {1 {vlog -work work -vopt F:/Modelsim/examples/PC_test.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module PC_test
+
+Top level modules:
+	PC_test
+
+} {} {}} F:/Modelsim/examples/PC.v {1 {vlog -work work -vopt F:/Modelsim/examples/PC.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module PC
+
+Top level modules:
+	PC
+
+} {} {}} F:/Modelsim/examples/RegHeap_test.v {1 {vlog -work work -vopt F:/Modelsim/examples/RegHeap_test.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module RegHeap_test
+
+Top level modules:
+	RegHeap_test
+
+} {} {}} F:/Modelsim/examples/Add4_test.v {1 {vlog -work work -vopt F:/Modelsim/examples/Add4_test.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module Add4_test
+
+Top level modules:
+	Add4_test
+
+} {} {}} F:/Modelsim/examples/IM_test.v {1 {vlog -work work -vopt F:/Modelsim/examples/IM_test.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module IM_test
+
+Top level modules:
+	IM_test
+
+} {} {}} F:/Modelsim/examples/Add4.v {1 {vlog -work work -vopt F:/Modelsim/examples/Add4.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module Add4
+
+Top level modules:
+	Add4
+
+} {} {}} F:/Modelsim/examples/AddBranch.v {1 {vlog -work work -vopt F:/Modelsim/examples/AddBranch.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module AddBranch
+
+Top level modules:
+	AddBranch
+
+} {} {}} F:/Modelsim/examples/ALU_test.v {1 {vlog -work work -vopt F:/Modelsim/examples/ALU_test.v
+Model Technology ModelSim SE vlog 10.1a Compiler 2012.02 Feb 22 2012
+-- Compiling module ALU_test
+
+Top level modules:
+	ALU_test
+
+} {} {}}

@@ -1,0 +1,81 @@
+$date
+	Mon May 16 15:25:33 2016
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module controlUnit_test $end
+$var wire 9 ! outCode [8:0] $end
+$var reg 1 " clk $end
+$var reg 6 # inCode [5:0] $end
+$scope module c $end
+$var wire 1 $ clk $end
+$var wire 6 % inCode [5:0] $end
+$var wire 9 & outCode [8:0] $end
+$var reg 9 ' result [8:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx '
+bx &
+bx %
+0$
+bx #
+0"
+bx !
+$end
+#4
+b0 '
+b0 !
+b0 &
+1"
+1$
+#8
+0"
+0$
+#10
+b0 #
+b0 %
+#12
+b100100010 '
+b100100010 !
+b100100010 &
+1"
+1$
+#16
+0"
+0$
+#20
+b101011 #
+b101011 %
+1"
+1$
+#24
+0"
+0$
+#28
+b10001000 '
+b10001000 !
+b10001000 &
+1"
+1$
+#30
+b100011 #
+b100011 %
+#32
+0"
+0$
+#36
+b11110000 '
+b11110000 !
+b11110000 &
+1"
+1$
+#40
+0"
+0$

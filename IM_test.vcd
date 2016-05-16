@@ -1,0 +1,42 @@
+$date
+	Mon May 16 15:20:27 2016
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module IM_test $end
+$var wire 32 ! outContent_t [31:0] $end
+$var reg 32 " inAddr_t [31:0] $end
+$scope module im $end
+$var wire 32 # inAddr [31:0] $end
+$var wire 32 $ outContent [31:0] $end
+$var integer 32 % i [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b1000 %
+bx $
+bx #
+bx "
+bx !
+$end
+#10
+b0 "
+b0 #
+b1 !
+b1 $
+#20
+b1 "
+b1 #
+b10 !
+b10 $
+#30
+b10 "
+b10 #
+b11 !
+b11 $

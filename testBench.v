@@ -1,0 +1,60 @@
+`include"PC.v"
+`include"IM.v"
+`include"controlUnit.v"
+`include"RegHeap.v"
+`include"muxtwo_4.v"
+`include"signExt.v"
+`include"muxtwo_32.v"
+`include"ALUControl.v"
+`include"ALU.v"
+module testBench();
+	reg clk;
+
+	reg[31:0] pcInputAddr; //type 'reg' for test
+	wire[31:0] pcOutAddr;
+	wire[31:0] imOutData;
+	wire[8:0] ctrlUnitOutCode;
+
+	wire[31:0] reg1Data;
+	wire[31:0] reg2Data;
+	wire[4:0] writeReg;
+	wire[31:0] extSign32;//符号扩展单元
+	wire[31:0] mw32Out;
+	wire[3:0] aluctrl;//alu的控制信号
+	wire[31:0] aluResult;//ALU运算结果
+
+	reg regWrite;//for test
+	reg[31:0] writeData;//for test
+
+	
+
+	initial
+	begin
+		
+		clk=0;
+		regWrite=0;
+		writeData=6;
+		pcInputAddr=0;
+		$dumpfile("test1.vcd");
+		$dumpvars;
+		#10 pcInputAddr=0;
+		#10 pcInputAddr=1;
+		#10 pcInputAddr=2;
+		#10 pcInputAddr=3;
+		#10 pcInputAddr=5;
+		#10 $finish;
+	end
+
+	always 
+	 #1 clk<=~clk;
+
+	PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk));
+	IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
+	controlUnit controlunit(.inCode(imOutData[31:26]),.outCode(ctrlUnitOutCode),.clk(clk));
+	muxtwo_4 mw4(.in1(imOutData[20:16]),.in2(imOutData[15:11]),.sl(ctrlUnitOutCode[8]),.out(writeReg));//
+	RegHeap regHeap(.readReg1(imOutData[25:21]),.readReg2(imOutData[20:16]),.writeReg(writeReg),.regWrite(regWrite),.writeData(writeData),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
+	signExt signext(.in1(imOutData[15:0]),.out(extSign32));
+	muxtwo_32 mw32(.in1(reg2Data),.in2(extSign32),.sl(ctrlUnitOutCode[7]),.out(mw32Out));
+	ALUControl aluControl(.func(imOutData[5:0]),.aluop(ctrlUnitOutCode[1:0]),.aluctrl(aluctrl),.clk(clk));
+	ALU alu(.in1(reg1Data),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.clk(clk));
+endmodule
