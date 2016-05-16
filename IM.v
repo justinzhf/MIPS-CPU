@@ -8,9 +8,7 @@ module IM #(parameter WIDTH=32)(inAddr,outContent);
   
   initial
   begin
-    $readmemh("memData.data",mem);
-    for(i=0;i<8;i=i+1)
-      $display(mem[i]);
+    $readmemh("IMData.data",mem);
   end
   assign outContent=mem[inAddr];
   
