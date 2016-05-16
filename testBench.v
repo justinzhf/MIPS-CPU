@@ -55,23 +55,24 @@ module testBench();
 		clk=0;
 		regWrite=0;
 		pcInputAddr=0;
-		#10 pcInputAddr=1;
-		#10 pcInputAddr=2;
-		#30 $finish;
+		#20 pcInputAddr=1;
+		#20 pcInputAddr=2;
+		#20 pcInputAddr=3;
+		#40 $finish;
 	end
 
 	always 
-	 #1 clk<=~clk;
+	 #10 clk<=~clk;
 
 	PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk));
 	IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
-	controlUnit controlunit(.inCode(imOutData[31:26]),.outCode(ctrlUnitOutCode),.clk(clk));
+	controlUnit controlunit(.inCode(imOutData[31:26]),.outCode(ctrlUnitOutCode));
 	muxtwo_4 mw4(.in1(imOutData[20:16]),.in2(imOutData[15:11]),.sl(ctrlUnitOutCode[8]),.out(writeReg));//
 	RegHeap regHeap(.readReg1(imOutData[25:21]),.readReg2(imOutData[20:16]),.writeReg(writeReg),.regWrite(ctrlUnitOutCode[5]),.writeData(writeData),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
 	signExt signext(.in1(imOutData[15:0]),.out(extSign32));
 	muxtwo_32 mw32(.in1(reg2Data),.in2(extSign32),.sl(ctrlUnitOutCode[7]),.out(mw32Out));
 	ALUControl aluControl(.func(imOutData[5:0]),.aluop(ctrlUnitOutCode[1:0]),.aluctrl(aluctrl),.clk(clk));
-	ALU alu(.in1(reg1Data),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.clk(clk));
+	ALU alu(.in1(reg1Data),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult));
 	DM dm(.inAddr(aluResult),.writeData(reg2Data),.memRead(ctrlUnitOutCode[4]),.memWrite(ctrlUnitOutCode[3]),.outData(dmOutData),.clk(clk));
 	muxtwo_32 mw32_2(.in1(aluResult),.in2(dmOutData),.sl(ctrlUnitOutCode[6]),.out(writeData));
 endmodule

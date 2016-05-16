@@ -1,10 +1,10 @@
-module controlUnit(inCode,outCode,clk);
+module controlUnit(inCode,outCode);
 	input[5:0] inCode;
 	input clk;
 	output[8:0] outCode; 
 	reg[8:0] result; 
 //0011100000
-	always @(posedge clk)
+	always @(inCode)
 	begin
 		case(inCode)
 			6'b000000: result<=9'b100100010;

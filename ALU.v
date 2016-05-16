@@ -1,4 +1,4 @@
-module ALU(in1,in2,ctrl,out,clk);
+module ALU(in1,in2,ctrl,out);
   input[31:0] in1;
   input[31:0] in2;
   input[3:0] ctrl;
@@ -12,7 +12,7 @@ module ALU(in1,in2,ctrl,out,clk);
   end
   
   
-  always @(posedge clk)
+  always @(in1 or in2 or ctrl)
   begin
     case(ctrl)
     4'b0000:  result<=in1&in2;
