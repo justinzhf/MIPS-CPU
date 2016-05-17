@@ -39,14 +39,6 @@ module CPU(clk);
 	//reg regWrite;//for test
 	wire[31:0] writeData;//for test
 	wire rst;
-
-/*	//to test DM read
-	reg[31:0] dmAddr;
-	wire[31:0] dmData;
-	reg dmRead;
-	reg dmWrite;
-*/	
-	//to test RegHeap
 	reg[4:0] readReg1_t,readReg2_t;
 	wire[31:0] reg1Data_t,reg2Data_t;
 	reg writeReg_t;

@@ -18,11 +18,11 @@ module ALU(in1,in2,ctrl,out,zero);
   begin
     case(ctrl)
     4'b0000:  result=in1&in2;
-    4'b0001:  result=in1||in2;
+    4'b0001:  result=in1|in2;
     4'b0010:  result=in1+in2;
     4'b0110:  result=in1-in2;
     4'b0111:  result=(in1<in2)?1:0;
-    4'b1100:  result=!(in1||in2);
+    4'b1100:  result=!(in1|in2);
     default:  result=0;
   endcase
     zero=(result==0)?1:0;

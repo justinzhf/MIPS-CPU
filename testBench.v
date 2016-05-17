@@ -8,7 +8,7 @@ module testBench();
 		$dumpvars;
 		//inAddr=0;
 		clk=1;
-		#200 $finish;
+		#500 $finish;
 	end
 	always  begin
 		#10 clk<=~clk;
