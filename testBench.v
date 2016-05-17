@@ -13,5 +13,5 @@ module testBench();
 	always  begin
 		#10 clk<=~clk;
 	end
-	CPU cpu(.pcInputAddr(inAddr),.clk(clk));
+	CPU cpu(.clk(clk));
 endmodule

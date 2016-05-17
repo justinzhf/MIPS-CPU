@@ -13,7 +13,8 @@
 //`include"And.v"
 module CPU(clk);
 	input clk;
-	reg[31:0] pcInputAddr; //type 'reg' for test
+	wire[31:0] pcInputAddr; //type 'reg' for test
+	reg[31:0] tempPcInAddr;
 
 	wire[31:0] pcOutAddr;
 	wire[31:0] imOutData;
@@ -36,6 +37,7 @@ module CPU(clk);
 
 	//reg regWrite;//for test
 	wire[31:0] writeData;//for test
+	wire rst;
 
 /*	//to test DM read
 	reg[31:0] dmAddr;
@@ -47,24 +49,17 @@ module CPU(clk);
 	reg[4:0] readReg1_t,readReg2_t;
 	wire[31:0] reg1Data_t,reg2Data_t;
 	reg writeReg_t;
-
+	reg test;
+	
 	initial
 	begin
-/*	//to test DM read
-		dmAddr=7;
-		dmRead=1;
-		dmWrite=1;
-*/
-		//to test RegHeap
-		//readReg1_t=9;
-		//writeReg_t=1;
-		//regWrite=0;
 	end
 		
-		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk));
+		assign rst=0;
+		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst));
 		Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
 		AddBranch addBranch(.inAddr_add(pcPlus4),.inAddr_sl2(extSign32*4),.outAddr(addBranchOut));
-		muxtwo_32 mw32_3(.in1(pcPlus4),.in2(addBranchOut),.sl(ctrlUnitOutCode[2]&zero),.out(branOrPc));
+		muxtwo_32 mw32_3(.in1(pcPlus4),.in2(addBranchOut),.sl(ctrlUnitOutCode[2]&zero),.out(pcInputAddr));
 		//muxtwo_32 mw32_4(.in1(imOutData[25:0]*4+pcPlus4[31:28]),.in2(branOrPc),.sl(andOut),.out(mw32Out));
 		IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
 		controlUnit controlunit(.inCode(imOutData[31:26]),.outCode(ctrlUnitOutCode));
