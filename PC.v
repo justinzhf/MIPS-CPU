@@ -9,12 +9,12 @@ module PC #(parameter WIDTH=32) (inAddr,outAddr,clk,rst);
   
   initial
   begin
-    con=0;
+    con=32'h0000_3000;
   end
 
   always @(posedge clk or rst or inAddr)
   begin
-    if(rst==1)con=0;
+    if(rst==1)con=32'h0000_3000;
     else begin
      outAddr=con;
      #1 con=inAddr;

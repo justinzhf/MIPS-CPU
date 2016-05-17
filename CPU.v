@@ -10,7 +10,7 @@
 `include"DM.v"
 `include"Add4.v"
 `include"AddBranch.v"
-//`include"And.v"
+`include"SL2Add.v"
 module CPU(clk);
 	input clk;
 	wire[31:0] pcInputAddr; //type 'reg' for test
@@ -18,7 +18,7 @@ module CPU(clk);
 
 	wire[31:0] pcOutAddr;
 	wire[31:0] imOutData;
-	wire[8:0] ctrlUnitOutCode;
+	wire[9:0] ctrlUnitOutCode;
 
 	wire[31:0] reg1Data;
 	wire[31:0] reg2Data;
@@ -33,6 +33,7 @@ module CPU(clk);
 	wire zero;
 	wire andOut;
 	wire[31:0] branOrPc;
+	wire[31:0] sl2AddOut;
 
 
 	//reg regWrite;//for test
@@ -59,8 +60,9 @@ module CPU(clk);
 		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst));
 		Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
 		AddBranch addBranch(.inAddr_add(pcPlus4),.inAddr_sl2(extSign32*4),.outAddr(addBranchOut));
-		muxtwo_32 mw32_3(.in1(pcPlus4),.in2(addBranchOut),.sl(ctrlUnitOutCode[2]&zero),.out(pcInputAddr));
-		//muxtwo_32 mw32_4(.in1(imOutData[25:0]*4+pcPlus4[31:28]),.in2(branOrPc),.sl(andOut),.out(mw32Out));
+		muxtwo_32 mw32_3(.in1(pcPlus4),.in2(addBranchOut),.sl(ctrlUnitOutCode[2]&zero),.out(branOrPc));
+		SL2Add sl2Add(.in26(imOutData[25:0]),.in4(pcPlus4[31:28]),.out32(sl2AddOut));
+		muxtwo_32 mw32_4(.in1(branOrPc),.in2(sl2AddOut),.sl(ctrlUnitOutCode[9]),.out(pcInputAddr));
 		IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
 		controlUnit controlunit(.inCode(imOutData[31:26]),.outCode(ctrlUnitOutCode));
 		muxtwo_4 mw4(.in1(imOutData[20:16]),.in2(imOutData[15:11]),.sl(ctrlUnitOutCode[8]),.out(writeReg));//
