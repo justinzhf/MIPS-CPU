@@ -6,17 +6,22 @@ module DM(inAddr,writeData,memRead,memWrite,outData,clk);
 	output[31:0] outData;
 	input clk;
 
-	reg[31:0] mem[255:0];
+	reg[7:0] mem[1023:0];
 
 	initial begin
 		$readmemh("DMData.data",mem);
 	end
 
 	always @(posedge clk) begin
-		if(memWrite)mem[inAddr]=writeData;
+		if(memWrite) begin
+			mem[inAddr]=writeData[7:0];
+			mem[inAddr+1]=writeData[15:8];
+			mem[inAddr+2]=writeData[23:15];
+			mem[inAddr+3]=writeData[31:24];
+		end
 		else;
 	end
 
-	assign outData = (memRead==1)?mem[inAddr]:0;
+	assign outData = (memRead==1)?{mem[inAddr+3],mem[inAddr+2],mem[inAddr+1],mem[inAddr]}:0;
 
 endmodule

@@ -8,6 +8,8 @@
 `include"ALUControl.v"
 `include"ALU.v"
 `include"DM.v"
+`include"Add4.v"
+`include"AddBranch.v"
 module testBench();
 	reg clk;
 
@@ -24,6 +26,8 @@ module testBench();
 	wire[3:0] aluctrl;//alu的控制信号
 	wire[31:0] aluResult;//ALU运算结果
 	wire[31:0] dmOutData;
+	wire[31:0] pcPlus4;
+	wire[31:0] addBranchOut;
 
 	reg regWrite;//for test
 	wire[31:0] writeData;//for test
@@ -55,9 +59,9 @@ module testBench();
 		clk=0;
 		regWrite=0;
 		pcInputAddr=0;
-		#20 pcInputAddr=1;
-		#20 pcInputAddr=2;
-		#20 pcInputAddr=3;
+		#20 pcInputAddr=4;
+		#20 pcInputAddr=8;
+		#20 pcInputAddr=12;
 		#40 $finish;
 	end
 
@@ -65,6 +69,8 @@ module testBench();
 	 #10 clk<=~clk;
 
 	PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk));
+	Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
+	AddBranch addBranch(.inAddr_add(pcPlus4),.inAddr_sl2(extSign32*4),.outAddr(addBranchOut));
 	IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
 	controlUnit controlunit(.inCode(imOutData[31:26]),.outCode(ctrlUnitOutCode));
 	muxtwo_4 mw4(.in1(imOutData[20:16]),.in2(imOutData[15:11]),.sl(ctrlUnitOutCode[8]),.out(writeReg));//
