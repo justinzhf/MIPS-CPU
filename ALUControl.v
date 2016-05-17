@@ -1,4 +1,4 @@
-module ALUControl(func,aluop,aluctrl,clk);
+module ALUControl(func,aluop,aluctrl);
 	input[5:0] func;
 	input[1:0] aluop;
 	input clk;
@@ -6,7 +6,7 @@ module ALUControl(func,aluop,aluctrl,clk);
 
 	reg[3:0] aluctrl;
 
-	always @(posedge clk) begin
+	always @(func or aluop or aluctrl) begin
 		if(aluop==2'b00)
 			aluctrl<=4'b0010;
 		else if(aluop==2'b01)
