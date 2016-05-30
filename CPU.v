@@ -36,7 +36,6 @@ module CPU(clk);
 	wire[31:0] sl2AddOut;
 
 
-	//reg regWrite;//for test
 	wire[31:0] writeData;//for test
 	wire rst;
 	reg[4:0] readReg1_t,readReg2_t;

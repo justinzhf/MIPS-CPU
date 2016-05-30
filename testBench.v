@@ -1,10 +1,9 @@
 `include"CPU.v"
 module testBench();
-	reg[31:0] inAddr;
 	reg clk;
 
 	initial begin
-		$dumpfile("test1.vcd");
+		$dumpfile("test2.vcd");
 		$dumpvars;
 		//inAddr=0;
 		clk=1;
