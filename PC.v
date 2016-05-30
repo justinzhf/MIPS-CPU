@@ -12,7 +12,7 @@ module PC #(parameter WIDTH=32) (inAddr,outAddr,clk,rst);
     con=32'h0000_3000;
   end
 
-  always @(posedge clk or rst or inAddr)
+  always @( rst or inAddr)
   begin
     if(rst==1)con=32'h0000_3000;
     else begin
