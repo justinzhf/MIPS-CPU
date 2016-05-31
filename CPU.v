@@ -16,8 +16,9 @@
 `include"EXMEM.v"
 `include"MEMWB.v"
 `include"muxtwo_5.v"
-module CPU(clk);
+module CPU(clk,rst);
 	input clk;
+	input rst;
 	wire[31:0] pcInputAddr; //type 'reg' for test
 	reg[31:0] tempPcInAddr;
 
@@ -58,8 +59,6 @@ module CPU(clk);
 	begin
 	end
 		
-		assign rst=0;
-
 
 		muxtwo_32 mw32_pc(.in1(pcPlus4),.in2(exmemOut[101:70]),.sl(exmemOut[104]&&exmemOut[69]),.out(pcInputAddr));
 		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst));
