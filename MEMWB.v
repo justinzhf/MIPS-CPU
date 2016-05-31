@@ -1,8 +1,10 @@
-module MEMWB(readData,aluResult,out,clk,rst);
+module MEMWB(wb,readData,aluResult,rtd,out,clk,rst);
 	input[31:0] readData,aluResult;
-	output[63:0] out;
+	output[70:0] out;
 	input clk,rst;
-	reg[63:0] out;
+	input[1:0] wb;
+	input[4:0] rtd;
+	reg[70:0] out;
 
 	initial
 	begin
@@ -14,7 +16,7 @@ module MEMWB(readData,aluResult,out,clk,rst);
 			out<=0;
 		end
 		else begin
-			out<={readData,aluResult};
+			out<={wb,readData,aluResult,rtd};
 		end
 	end
 

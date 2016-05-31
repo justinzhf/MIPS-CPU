@@ -12,7 +12,7 @@ module DM(inAddr,writeData,memRead,memWrite,outData,clk);
 		$readmemh("DMData.data",mem);
 	end
 
-	always @(posedge clk) begin
+	always @(inAddr) begin
 		if(memWrite) begin
 			mem[inAddr]=writeData[7:0];
 			mem[inAddr+1]=writeData[15:8];
