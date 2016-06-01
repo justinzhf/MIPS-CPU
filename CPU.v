@@ -69,7 +69,7 @@ module CPU(clk,rst);
 
 		controlUnit controlunit(.inCode(ifidOut[31:26]),.outCode(ctrlUnitOutCode));
 		signExt signext(.in1(ifidOut[15:0]),.out(extSign32));
-		RegHeap regHeap(.readReg1(ifidOut[25:21]),.readReg2(ifidOut[20:16]),.writeReg(exmemOut[4:0]),.regWrite(memwbOut[69]),.writeData(mw32_memOut),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
+		RegHeap regHeap(.readReg1(ifidOut[25:21]),.readReg2(ifidOut[20:16]),.writeReg(memwbOut[4:0]),.regWrite(memwbOut[69]),.writeData(mw32_memOut),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
 
 		IDEX idex(.wb({ctrlUnitOutCode[6],ctrlUnitOutCode[5]}),.m({ctrlUnitOutCode[2],ctrlUnitOutCode[4],ctrlUnitOutCode[3]}),.ex({ctrlUnitOutCode[7],ctrlUnitOutCode[8],ctrlUnitOutCode[1],ctrlUnitOutCode[0]}),.add4(ifidOut[63:32]),.readData1(reg1Data),.readData2(reg2Data),.signExt(extSign32),.rt(ifidOut[20:16]),.rd(ifidOut[15:11]),.out(idexOut),.clk(clk),.rst(rst));
 
@@ -83,7 +83,7 @@ module CPU(clk,rst);
 
 		DM dm(.inAddr(exmemOut[68:37]),.writeData(exmemOut[36:5]),.memRead(exmemOut[103]),.memWrite(exmemOut[102]),.outData(dmOutData),.clk(clk));
 
-		MEMWB memwb(.wb({exmemOut[106],exmemOut[105]}),.readData(dmOutData),.aluResult(exmemOut[36:5]),.rtd(exmemOut[4:0]),.out(memwbOut),.clk(clk),.rst(rst));
+		MEMWB memwb(.wb({exmemOut[106],exmemOut[105]}),.readData(dmOutData),.aluResult(exmemOut[68:37]),.rtd(exmemOut[4:0]),.out(memwbOut),.clk(clk),.rst(rst));
 
 		muxtwo_32 mw32_mem(.in1(memwbOut[36:5]),.in2(memwbOut[68:37]),.sl(memwbOut[70]),.out(mw32_memOut));
 

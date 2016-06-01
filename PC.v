@@ -8,14 +8,14 @@ module PC #(parameter WIDTH=32) (inAddr,outAddr,clk,rst);
   
   initial
   begin
-    outAddr=32'h0000_3000;
+    outAddr<=32'h0000_3000;
   end
 
-  always @( rst or posedge clk)
+  always @(  posedge clk)
   begin
-    if(rst==1)outAddr=32'h0000_3000;
+    if(rst==1)outAddr<=32'h0000_3000;
     else begin
-     outAddr=inAddr;
+     outAddr<=inAddr;
     end
   end
   

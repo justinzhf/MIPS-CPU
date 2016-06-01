@@ -15,7 +15,7 @@ module IFID(addr4,ins,out,clk,rst);
 			out<=0;
 		end
 		else begin
-		out={addr4,ins};
+		out<={addr4,ins};
 		end
 	end
 

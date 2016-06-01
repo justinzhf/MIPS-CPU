@@ -6,10 +6,9 @@ module testBench();
 		$dumpfile("test2.vcd");
 		$dumpvars;
 		//inAddr=0;
-		clk=1;
+		clk<=1;
 		rst=1;
-		#21 rst=0;
-	//	#20 rst=0;
+		#20 rst=0;
 		#500 $finish;
 	end
 	always  begin
