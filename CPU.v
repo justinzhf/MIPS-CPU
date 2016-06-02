@@ -18,6 +18,8 @@
 `include"muxtwo_5.v"
 `include"muxthree.v"
 `include"SwapUnit.v"
+`include"muxtwo_9.v"
+`include"HazardCheckUnit.v"
 module CPU(clk,rst);
 	input clk;
 	input rst;
@@ -60,23 +62,30 @@ module CPU(clk,rst);
 	wire[31:0] mt1Out;
 	wire[31:0] mt2Out;
 	wire[1:0] forwardA,forwardB;
+	wire[8:0] mw9Out;
+	wire PCWrite;
+	wire ctrlSetZero;
+	wire IFIDWrite;
+
 	initial
 	begin
 	end
 		
 
 		muxtwo_32 mw32_pc(.in1(pcPlus4),.in2(exmemOut[101:70]),.sl(exmemOut[104]&&exmemOut[69]),.out(pcInputAddr));
-		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst));
+		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst),.PCWrite(PCWrite));
 		Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
 		IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
 
-		IFID ifid(.addr4(pcPlus4),.ins(imOutData),.out(ifidOut),.clk(clk),.rst(rst));
+		IFID ifid(.addr4(pcPlus4),.ins(imOutData),.out(ifidOut),.clk(clk),.rst(rst),.IFIDWrite(IFIDWrite));
 
+		HazardCheckUnit hazardCheck(.IDEXMemRead(idexOut[143]),.IDEXRt(idexOut[9:5]),.IFIDRs(ifidOut[25:21]),.IFIDRt(ifidOut[20:16]),.PCWrite(PCWrite),.IFIDWrite(IFIDWrite),.ctrlSetZero(ctrlSetZero));
 		controlUnit controlunit(.inCode(ifidOut[31:26]),.outCode(ctrlUnitOutCode));
+		muxtwo_9 mw9(.in1(ctrlUnitOutCode[8:0]),.in2(0),.sl(ctrlSetZero),.out(mw9Out));
 		signExt signext(.in1(ifidOut[15:0]),.out(extSign32));
 		RegHeap regHeap(.readReg1(ifidOut[25:21]),.readReg2(ifidOut[20:16]),.writeReg(memwbOut[4:0]),.regWrite(memwbOut[69]),.writeData(mw32_memOut),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
 
-		IDEX idex(.rs(ifidOut[25:21]),.wb({ctrlUnitOutCode[6],ctrlUnitOutCode[5]}),.m({ctrlUnitOutCode[2],ctrlUnitOutCode[4],ctrlUnitOutCode[3]}),.ex({ctrlUnitOutCode[7],ctrlUnitOutCode[8],ctrlUnitOutCode[1],ctrlUnitOutCode[0]}),.add4(ifidOut[63:32]),.readData1(reg1Data),.readData2(reg2Data),.signExt(extSign32),.rt(ifidOut[20:16]),.rd(ifidOut[15:11]),.out(idexOut),.clk(clk),.rst(rst));
+		IDEX idex(.rs(ifidOut[25:21]),.wb({ctrlUnitOutCode[6],mw9Out[5]}),.m({mw9Out[2],mw9Out[4],mw9Out[3]}),.ex({mw9Out[7],mw9Out[8],mw9Out[1],mw9Out[0]}),.add4(ifidOut[63:32]),.readData1(reg1Data),.readData2(reg2Data),.signExt(extSign32),.rt(ifidOut[20:16]),.rd(ifidOut[15:11]),.out(idexOut),.clk(clk),.rst(rst));
 
 		SwapUnit swapUnit(.rs(idexOut[151:147]),.rt(idexOut[9:5]),.rd(idexOut[4:0]),.EXMEMregWrite(exmemOut[105]),.EXMEMregisterRd(exmemOut[4:0]),.MEMWBregisterRd(memwbOut[4:0]),.MEMWBregWrite(memwbOut[69]),.forwardA(forwardA),.forwardB(forwardB),.rst(rst));
 		muxthree mt1(.in1(idexOut[105:74]),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardA),.out(mt1Out));
@@ -94,10 +103,6 @@ module CPU(clk,rst);
 		MEMWB memwb(.wb({exmemOut[106],exmemOut[105]}),.readData(dmOutData),.aluResult(exmemOut[68:37]),.rtd(exmemOut[4:0]),.out(memwbOut),.clk(clk),.rst(rst));
 
 		muxtwo_32 mw32_mem(.in1(memwbOut[36:5]),.in2(memwbOut[68:37]),.sl(memwbOut[70]),.out(mw32_memOut));
-
-
-
-
 
 
 

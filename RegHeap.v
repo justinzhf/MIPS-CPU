@@ -15,7 +15,7 @@ module RegHeap(readReg1,readReg2,writeReg,regWrite,writeData,reg1Data,reg2Data,c
     $readmemh("regHeapData.data",mem);
   end
   
-  always @(posedge clk)
+  always @(posedge clk or writeData)
   begin
     if(regWrite)mem[writeReg]<=writeData;  
   end
