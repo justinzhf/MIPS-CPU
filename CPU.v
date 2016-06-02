@@ -16,6 +16,8 @@
 `include"EXMEM.v"
 `include"MEMWB.v"
 `include"muxtwo_5.v"
+`include"muxthree.v"
+`include"SwapUnit.v"
 module CPU(clk,rst);
 	input clk;
 	input rst;
@@ -50,11 +52,14 @@ module CPU(clk,rst);
 	reg test;
 
 	wire[63:0] ifidOut;
-	wire[146:0] idexOut;
+	wire[151:0] idexOut;
 	wire[106:0] exmemOut;
 	wire[70:0] memwbOut;
 	wire[4:0] mw5Out;
 	wire[31:0] mw32_memOut;
+	wire[31:0] mt1Out;
+	wire[31:0] mt2Out;
+	wire[1:0] forwardA,forwardB;
 	initial
 	begin
 	end
@@ -71,12 +76,15 @@ module CPU(clk,rst);
 		signExt signext(.in1(ifidOut[15:0]),.out(extSign32));
 		RegHeap regHeap(.readReg1(ifidOut[25:21]),.readReg2(ifidOut[20:16]),.writeReg(memwbOut[4:0]),.regWrite(memwbOut[69]),.writeData(mw32_memOut),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
 
-		IDEX idex(.wb({ctrlUnitOutCode[6],ctrlUnitOutCode[5]}),.m({ctrlUnitOutCode[2],ctrlUnitOutCode[4],ctrlUnitOutCode[3]}),.ex({ctrlUnitOutCode[7],ctrlUnitOutCode[8],ctrlUnitOutCode[1],ctrlUnitOutCode[0]}),.add4(ifidOut[63:32]),.readData1(reg1Data),.readData2(reg2Data),.signExt(extSign32),.rt(ifidOut[20:16]),.rd(ifidOut[15:11]),.out(idexOut),.clk(clk),.rst(rst));
+		IDEX idex(.rs(ifidOut[25:21]),.wb({ctrlUnitOutCode[6],ctrlUnitOutCode[5]}),.m({ctrlUnitOutCode[2],ctrlUnitOutCode[4],ctrlUnitOutCode[3]}),.ex({ctrlUnitOutCode[7],ctrlUnitOutCode[8],ctrlUnitOutCode[1],ctrlUnitOutCode[0]}),.add4(ifidOut[63:32]),.readData1(reg1Data),.readData2(reg2Data),.signExt(extSign32),.rt(ifidOut[20:16]),.rd(ifidOut[15:11]),.out(idexOut),.clk(clk),.rst(rst));
 
+		SwapUnit swapUnit(.rs(idexOut[151:147]),.rt(idexOut[9:5]),.rd(idexOut[4:0]),.EXMEMregWrite(exmemOut[105]),.EXMEMregisterRd(exmemOut[4:0]),.MEMWBregisterRd(memwbOut[4:0]),.MEMWBregWrite(memwbOut[69]),.forwardA(forwardA),.forwardB(forwardB),.rst(rst));
+		muxthree mt1(.in1(idexOut[105:74]),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardA),.out(mt1Out));
+		muxthree mt2(.in1(idexOut[73:42]),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardB),.out(mt2Out));
 		AddBranch addBranch(.inAddr_add(idexOut[137:106]),.inAddr_sl2(idexOut[41:10]*4),.outAddr(addBranchOut));
-		muxtwo_32 mw32(.in1(idexOut[73:42]),.in2(idexOut[41:10]),.sl(idexOut[141]),.out(mw32Out));
+		muxtwo_32 mw32(.in1(mt2Out),.in2(idexOut[41:10]),.sl(idexOut[141]),.out(mw32Out));
 		ALUControl aluControl(.func(idexOut[15:10]),.aluop({idexOut[139],idexOut[138]}),.aluctrl(aluctrl));
-		ALU alu(.in1(idexOut[105:74]),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.zero(zero));
+		ALU alu(.in1(mt1Out),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.zero(zero));
 		muxtwo_5 mw5(.in1(idexOut[9:5]),.in2(idexOut[4:0]),.sl(idexOut[140]),.out(mw5Out));
 
 		EXMEM exmem(.wb({idexOut[146],idexOut[145]}),.m({idexOut[144],idexOut[143],idexOut[142]}),.addBranch(addBranchOut),.aluZero(zero),.aluResult(aluResult),.readData2(idexOut[73:42]),.mw5Out(mw5Out),.out(exmemOut),.clk(clk),.rst(rst));
