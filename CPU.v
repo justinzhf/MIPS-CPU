@@ -79,7 +79,7 @@ module CPU(clk,rst);
 
 		IFID ifid(.addr4(pcPlus4),.ins(imOutData),.out(ifidOut),.clk(clk),.rst(rst),.IFIDWrite(IFIDWrite));
 
-		HazardCheckUnit hazardCheck(.IDEXMemRead(idexOut[143]),.IDEXRt(idexOut[9:5]),.IFIDRs(ifidOut[25:21]),.IFIDRt(ifidOut[20:16]),.PCWrite(PCWrite),.IFIDWrite(IFIDWrite),.ctrlSetZero(ctrlSetZero));
+		HazardCheckUnit hazardCheck(.IDEXMemRead(idexOut[143]),.IDEXRt(idexOut[9:5]),.IFIDRs(ifidOut[25:21]),.IFIDRt(ifidOut[20:16]),.PCWrite(PCWrite),.IFIDWrite(IFIDWrite),.ctrlSetZero(ctrlSetZero),.IDEXRd(idexOut[4:0]),.IDEXRegWrite(idexOut[145]),.opcode(ifidOut[31:26]),.EXMEMRead(exmemOut[103]),.EXMEMRt(exmemOut[4:0]));
 		controlUnit controlunit(.inCode(ifidOut[31:26]),.outCode(ctrlUnitOutCode));
 		muxtwo_9 mw9(.in1(ctrlUnitOutCode[8:0]),.in2(0),.sl(ctrlSetZero),.out(mw9Out));
 		signExt signext(.in1(ifidOut[15:0]),.out(extSign32));

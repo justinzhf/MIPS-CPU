@@ -1,6 +1,7 @@
-module HazardCheckUnit(IDEXMemRead,IDEXRt,IFIDRs,IFIDRt,PCWrite,IFIDWrite,ctrlSetZero);
-	input[4:0] IDEXRt,IFIDRt,IFIDRs;
-	input IDEXMemRead;
+module HazardCheckUnit(IDEXMemRead,IDEXRt,IFIDRs,IFIDRt,PCWrite,IFIDWrite,ctrlSetZero,IDEXRd,IDEXRegWrite,opcode,EXMEMRead,EXMEMRt);
+	input[4:0] IDEXRt,IFIDRt,IFIDRs,IDEXRd,EXMEMRt;
+	input IDEXMemRead,IDEXRegWrite,EXMEMRead;
+	input[5:0] opcode;
 	output PCWrite,IFIDWrite,ctrlSetZero;
 	reg PCWrite,IFIDWrite,ctrlSetZero;
 
@@ -10,16 +11,41 @@ module HazardCheckUnit(IDEXMemRead,IDEXRt,IFIDRs,IFIDRt,PCWrite,IFIDWrite,ctrlSe
 		IFIDWrite<=1;
 		ctrlSetZero<=0;
 	end
-	always @(IDEXMemRead or IDEXRt or IFIDRs or IFIDRt) begin
-		if(IDEXMemRead && ((IDEXRt==IFIDRs) || (IDEXRt==IFIDRt))) begin
-			PCWrite<=0;
-			IFIDWrite<=0;
-			ctrlSetZero<=1;
+	always @(opcode or IDEXMemRead or IDEXRt or IFIDRs or IFIDRt or IDEXRd or IDEXRegWrite ) begin
+		if(opcode==6'b000100)begin
+			if(IDEXMemRead && ((IDEXRt==IFIDRs) || (IDEXRt==IFIDRt))) begin//beq,lw,stall 2 clks
+				PCWrite<=0;
+				IFIDWrite<=0;
+				ctrlSetZero<=1;
+			end
+			else if(IDEXRegWrite && ((IDEXRd==IFIDRs) || (IDEXRd==IFIDRt)))begin//beq,R,stall 1 clk
+				PCWrite<=0;
+				IFIDWrite<=0;
+				ctrlSetZero<=1;
+			end
+			else begin
+				PCWrite<=1;
+				IFIDWrite<=1;
+				ctrlSetZero<=0;
+			end
+			if(EXMEMRead && ((EXMEMRt==IFIDRs) || (EXMEMRt==IFIDRt)))begin
+				PCWrite<=0;
+				IFIDWrite<=0;
+				ctrlSetZero<=1;
+			end
 		end
 		else begin
-			PCWrite<=1;
-			IFIDWrite<=1;
-			ctrlSetZero<=0;
+			if(IDEXMemRead && ((IDEXRt==IFIDRs) || (IDEXRt==IFIDRt))) begin//R,lw,stall 1 clk
+				PCWrite<=0;
+				IFIDWrite<=0;
+				ctrlSetZero<=1;
+			end
+			else begin
+				PCWrite<=1;
+				IFIDWrite<=1;
+				ctrlSetZero<=0;
+			end
 		end
+				
 	end
 endmodule
