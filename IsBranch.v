@@ -5,6 +5,7 @@ module IsBranch(in1,in2,opcode,out,IFFlush);
 	reg out,IFFlush;
 
 	always @(in1 or in2 or opcode) begin
+		if(opcode==6'b000010)IFFlush<=1;
 		if(opcode==6'b000100) begin
 			if(in1==in2)begin
 				out<=1;

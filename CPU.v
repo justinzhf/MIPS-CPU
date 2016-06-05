@@ -70,13 +70,14 @@ module CPU(clk,rst);
 	wire isBranchOut;
 	wire IFFlush;
 	wire overflow;
-
+	wire[31:0] pc1Out;
 	initial
 	begin
 	end
 		
-
-		muxtwo_32 mw32_pc(.in1(pcPlus4),.in2(addBranchOut),.sl(isBranchOut),.out(pcInputAddr));
+		muxtwo_32 mw32_pc1(.in1(pcPlus4),.in2(addBranchOut),.sl(isBranchOut),.out(pc1Out));
+		SL2Add sl2Add(.in26(ifidOut[25:0]),.in4(pcPlus4[31:28]),.out32(sl2AddOut));
+		muxtwo_32 mw32_pc2(.in1(pc1Out),.in2(sl2AddOut),.sl(ctrlUnitOutCode[9]),.out(pcInputAddr));
 		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst),.PCWrite(PCWrite),.overflow(overflow));
 		Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
 		IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
