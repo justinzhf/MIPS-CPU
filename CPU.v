@@ -20,6 +20,7 @@
 `include"SwapUnit.v"
 `include"muxtwo_9.v"
 `include"HazardCheckUnit.v"
+`include"IsBranch.v"
 module CPU(clk,rst);
 	input clk;
 	input rst;
@@ -59,28 +60,34 @@ module CPU(clk,rst);
 	wire[70:0] memwbOut;
 	wire[4:0] mw5Out;
 	wire[31:0] mw32_memOut;
-	wire[31:0] mt1Out;
+	wire[31:0] mt1Out,mt3Out,mt4Out;
 	wire[31:0] mt2Out;
-	wire[1:0] forwardA,forwardB;
+	wire[1:0] forwardA,forwardB,forwardC,forwardD;
 	wire[8:0] mw9Out;
 	wire PCWrite;
 	wire ctrlSetZero;
 	wire IFIDWrite;
+	wire isBranchOut;
+	wire IFFlush;
 
 	initial
 	begin
 	end
 		
 
-		muxtwo_32 mw32_pc(.in1(pcPlus4),.in2(exmemOut[101:70]),.sl(exmemOut[104]&&exmemOut[69]),.out(pcInputAddr));
+		muxtwo_32 mw32_pc(.in1(pcPlus4),.in2(addBranchOut),.sl(isBranchOut),.out(pcInputAddr));
 		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst),.PCWrite(PCWrite));
 		Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
 		IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
 
-		IFID ifid(.addr4(pcPlus4),.ins(imOutData),.out(ifidOut),.clk(clk),.rst(rst),.IFIDWrite(IFIDWrite));
+		IFID ifid(.addr4(pcPlus4),.ins(imOutData),.out(ifidOut),.clk(clk),.rst(rst),.IFIDWrite(IFIDWrite),.IFFlush(IFFlush));
 
-		HazardCheckUnit hazardCheck(.IDEXMemRead(idexOut[143]),.IDEXRt(idexOut[9:5]),.IFIDRs(ifidOut[25:21]),.IFIDRt(ifidOut[20:16]),.PCWrite(PCWrite),.IFIDWrite(IFIDWrite),.ctrlSetZero(ctrlSetZero),.IDEXRd(idexOut[4:0]),.IDEXRegWrite(idexOut[145]),.opcode(ifidOut[31:26]),.EXMEMRead(exmemOut[103]),.EXMEMRt(exmemOut[4:0]));
+		HazardCheckUnit hazardCheck(.IDEXMemRead(idexOut[143]),.IDEXRt(idexOut[9:5]),.IFIDRs(ifidOut[25:21]),.IFIDRt(ifidOut[20:16]),.PCWrite(PCWrite),.IFIDWrite(IFIDWrite),.ctrlSetZero(ctrlSetZero),.IDEXRd(idexOut[4:0]),.IDEXRegWrite(idexOut[145]),.opcode(ifidOut[31:26]),.EXMEMRead(exmemOut[103]),.EXMEMRt(exmemOut[4:0]),.clk(clk));
 		controlUnit controlunit(.inCode(ifidOut[31:26]),.outCode(ctrlUnitOutCode));
+		muxthree mt3(.in1(reg1Data),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardA),.out(mt3Out));
+		muxthree mt4(.in1(reg2Data),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardB),.out(mt4Out));
+		IsBranch isBranch(.in1(mt3Out),.in2(mt4Out),.opcode(ifidOut[31:26]),.out(isBranchOut),.IFFlush(IFFlush));
+		AddBranch addBranch(.inAddr_add(ifidOut[63:32]),.inAddr_sl2(extSign32*4),.outAddr(addBranchOut));
 		muxtwo_9 mw9(.in1(ctrlUnitOutCode[8:0]),.in2(0),.sl(ctrlSetZero),.out(mw9Out));
 		signExt signext(.in1(ifidOut[15:0]),.out(extSign32));
 		RegHeap regHeap(.readReg1(ifidOut[25:21]),.readReg2(ifidOut[20:16]),.writeReg(memwbOut[4:0]),.regWrite(memwbOut[69]),.writeData(mw32_memOut),.reg1Data(reg1Data),.reg2Data(reg2Data),.clk(clk));
@@ -90,7 +97,6 @@ module CPU(clk,rst);
 		SwapUnit swapUnit(.rs(idexOut[151:147]),.rt(idexOut[9:5]),.rd(idexOut[4:0]),.EXMEMregWrite(exmemOut[105]),.EXMEMregisterRd(exmemOut[4:0]),.MEMWBregisterRd(memwbOut[4:0]),.MEMWBregWrite(memwbOut[69]),.forwardA(forwardA),.forwardB(forwardB),.rst(rst));
 		muxthree mt1(.in1(idexOut[105:74]),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardA),.out(mt1Out));
 		muxthree mt2(.in1(idexOut[73:42]),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardB),.out(mt2Out));
-		AddBranch addBranch(.inAddr_add(idexOut[137:106]),.inAddr_sl2(idexOut[41:10]*4),.outAddr(addBranchOut));
 		muxtwo_32 mw32(.in1(mt2Out),.in2(idexOut[41:10]),.sl(idexOut[141]),.out(mw32Out));
 		ALUControl aluControl(.func(idexOut[15:10]),.aluop({idexOut[139],idexOut[138]}),.aluctrl(aluctrl));
 		ALU alu(.in1(mt1Out),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.zero(zero));

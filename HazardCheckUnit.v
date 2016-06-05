@@ -1,7 +1,8 @@
-module HazardCheckUnit(IDEXMemRead,IDEXRt,IFIDRs,IFIDRt,PCWrite,IFIDWrite,ctrlSetZero,IDEXRd,IDEXRegWrite,opcode,EXMEMRead,EXMEMRt);
+module HazardCheckUnit(IDEXMemRead,IDEXRt,IFIDRs,IFIDRt,PCWrite,IFIDWrite,ctrlSetZero,IDEXRd,IDEXRegWrite,opcode,EXMEMRead,EXMEMRt,clk);
 	input[4:0] IDEXRt,IFIDRt,IFIDRs,IDEXRd,EXMEMRt;
 	input IDEXMemRead,IDEXRegWrite,EXMEMRead;
 	input[5:0] opcode;
+	input clk;
 	output PCWrite,IFIDWrite,ctrlSetZero;
 	reg PCWrite,IFIDWrite,ctrlSetZero;
 
@@ -11,7 +12,7 @@ module HazardCheckUnit(IDEXMemRead,IDEXRt,IFIDRs,IFIDRt,PCWrite,IFIDWrite,ctrlSe
 		IFIDWrite<=1;
 		ctrlSetZero<=0;
 	end
-	always @(opcode or IDEXMemRead or IDEXRt or IFIDRs or IFIDRt or IDEXRd or IDEXRegWrite ) begin
+	always @(opcode or IDEXMemRead or IDEXRt or IFIDRs or IFIDRt or IDEXRd or IDEXRegWrite or  clk) begin
 		if(opcode==6'b000100)begin
 			if(IDEXMemRead && ((IDEXRt==IFIDRs) || (IDEXRt==IFIDRt))) begin//beq,lw,stall 2 clks
 				PCWrite<=0;

@@ -18,6 +18,7 @@ module SwapUnit(rs,rt,rd,EXMEMregWrite,EXMEMregisterRd,MEMWBregisterRd,MEMWBregW
 			if(MEMWBregWrite && (MEMWBregisterRd!=0) && !((EXMEMregWrite && (EXMEMregisterRd!=0)) && (EXMEMregisterRd==rt)) && (MEMWBregisterRd==rt))forwardB<=2'b01;
 			else if(EXMEMregWrite && (EXMEMregisterRd!=0) && (EXMEMregisterRd==rt)) forwardB<=2'b10;
 			else forwardB<=0;
+
 		end
 	end
 
