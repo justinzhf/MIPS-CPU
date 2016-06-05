@@ -7,7 +7,7 @@ module IM #(parameter WIDTH=32)(inAddr,outContent);
   
   initial
   begin
-    $readmemh("controlHazard.data",mem);
+    $readmemh("overflow.data",mem);
   end
   assign outContent={mem[inAddr+3],mem[inAddr+2],mem[inAddr+1],mem[inAddr]};
   

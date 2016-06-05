@@ -69,6 +69,7 @@ module CPU(clk,rst);
 	wire IFIDWrite;
 	wire isBranchOut;
 	wire IFFlush;
+	wire overflow;
 
 	initial
 	begin
@@ -76,7 +77,7 @@ module CPU(clk,rst);
 		
 
 		muxtwo_32 mw32_pc(.in1(pcPlus4),.in2(addBranchOut),.sl(isBranchOut),.out(pcInputAddr));
-		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst),.PCWrite(PCWrite));
+		PC pc(.inAddr(pcInputAddr),.outAddr(pcOutAddr),.clk(clk),.rst(rst),.PCWrite(PCWrite),.overflow(overflow));
 		Add4 add4(.inAddr(pcOutAddr),.outAddr(pcPlus4));
 		IM im(.inAddr(pcOutAddr),.outContent(imOutData));//imOutData为读出的指令
 
@@ -99,7 +100,7 @@ module CPU(clk,rst);
 		muxthree mt2(.in1(idexOut[73:42]),.in2(mw32_memOut),.in3(exmemOut[68:37]),.sl(forwardB),.out(mt2Out));
 		muxtwo_32 mw32(.in1(mt2Out),.in2(idexOut[41:10]),.sl(idexOut[141]),.out(mw32Out));
 		ALUControl aluControl(.func(idexOut[15:10]),.aluop({idexOut[139],idexOut[138]}),.aluctrl(aluctrl));
-		ALU alu(.in1(mt1Out),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.zero(zero));
+		ALU alu(.in1(mt1Out),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.zero(zero),.overflow(overflow));
 		muxtwo_5 mw5(.in1(idexOut[9:5]),.in2(idexOut[4:0]),.sl(idexOut[140]),.out(mw5Out));
 
 		EXMEM exmem(.wb({idexOut[146],idexOut[145]}),.m({idexOut[144],idexOut[143],idexOut[142]}),.addBranch(addBranchOut),.aluZero(zero),.aluResult(aluResult),.readData2(idexOut[73:42]),.mw5Out(mw5Out),.out(exmemOut),.clk(clk),.rst(rst));
