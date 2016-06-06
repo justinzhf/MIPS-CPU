@@ -1,0 +1,18 @@
+[*]
+[*] GTKWave Analyzer v3.3.48 (w)1999-2013 BSI
+[*] Mon Jun 06 12:50:53 2016
+[*]
+[dumpfile] "G:\cpu\test2.vcd"
+[dumpfile_mtime] "Mon Jun 06 12:49:24 2016"
+[dumpfile_size] 38145
+[savefile] "G:\cpu\testcase\ctrlHazard2.vcd"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*0.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 197
+[signals_width] 78
+[sst_expanded] 1
+[sst_vpaned_height] 152
+[pattern_trace] 1
+[pattern_trace] 0

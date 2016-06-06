@@ -104,7 +104,7 @@ module CPU(clk,rst);
 		ALU alu(.in1(mt1Out),.in2(mw32Out),.ctrl(aluctrl),.out(aluResult),.zero(zero),.overflow(overflow));
 		muxtwo_5 mw5(.in1(idexOut[9:5]),.in2(idexOut[4:0]),.sl(idexOut[140]),.out(mw5Out));
 
-		EXMEM exmem(.wb({idexOut[146],idexOut[145]}),.m({idexOut[144],idexOut[143],idexOut[142]}),.addBranch(addBranchOut),.aluZero(zero),.aluResult(aluResult),.readData2(idexOut[73:42]),.mw5Out(mw5Out),.out(exmemOut),.clk(clk),.rst(rst));
+		EXMEM exmem(.wb({idexOut[146],idexOut[145]}),.m({idexOut[144],idexOut[143],idexOut[142]}),.addBranch(addBranchOut),.aluZero(zero),.aluResult(aluResult),.readData2(mt2Out),.mw5Out(mw5Out),.out(exmemOut),.clk(clk),.rst(rst));
 
 		DM dm(.inAddr(exmemOut[68:37]),.writeData(exmemOut[36:5]),.memRead(exmemOut[103]),.memWrite(exmemOut[102]),.outData(dmOutData),.clk(clk));
 

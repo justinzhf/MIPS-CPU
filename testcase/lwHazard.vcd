@@ -1,0 +1,28 @@
+[*]
+[*] GTKWave Analyzer v3.3.48 (w)1999-2013 BSI
+[*] Mon Jun 06 11:44:51 2016
+[*]
+[dumpfile] "G:\cpu\test2.vcd"
+[dumpfile_mtime] "Mon Jun 06 11:43:40 2016"
+[dumpfile_size] 40531
+[savefile] "G:\cpu\testcase\lwHazard.vcd"
+[timestart] 202
+[size] 1366 705
+[pos] -35 -35
+*-4.000000 225 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] testBench.
+[treeopen] testBench.cpu.
+[sst_width] 197
+[signals_width] 329
+[sst_expanded] 1
+[sst_vpaned_height] 189
+@28
+testBench.cpu.ifid.clk
+@22
+testBench.cpu.ifid.out[63:0]
+@23
+testBench.cpu.alu.in1[31:0]
+testBench.cpu.alu.in2[31:0]
+testBench.cpu.alu.out[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -10,7 +10,7 @@ module testBench();
 		rst=1;
 
 		#20 rst=0;
-		#500 $finish;
+		#500000 $finish;
 	end
 	always  begin
 		#10 clk<=~clk;
