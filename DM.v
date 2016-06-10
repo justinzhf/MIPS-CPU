@@ -7,7 +7,6 @@ module DM(inAddr,writeData,memRead,memWrite,outData,clk);
 	input clk;
 
 	reg[7:0] mem[1023:0];
-
 	initial begin
 		$readmemh("DMData.data",mem);
 	end
